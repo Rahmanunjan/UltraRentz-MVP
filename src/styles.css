@@ -1,0 +1,122 @@
+:root[data-theme="dark"] {
+  --bg-color: #0a0a0a;
+  --text-color: #e6ffe6;
+  --form-bg: #111;
+  --btn-bg: #0f5132;
+  --btn-text: white;
+  --input-bg: #1a1a1a;
+  --calendar-icon-color: #0f0;
+  --border-color: #0f0;
+  --success-bg: #002f1f;
+  --error-bg: #330000;
+  --info-bg: #1a1a1a;
+}
+
+:root[data-theme="light"] {
+  --bg-color: #f9f9f9;
+  --text-color: #111;
+  --form-bg: #fff;
+  --btn-bg: #0d6efd;
+  --btn-text: white;
+  --input-bg: #f5f5f5;
+  --calendar-icon-color: #000;
+  --border-color: #0d6efd;
+  --success-bg: #d1fae5;
+  --error-bg: #fee2e2;
+  --info-bg: #f3f4f6;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.form-section {
+  background-color: var(--form-bg);
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(0, 255, 128, 0.1);
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin: 10px 0 4px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.button-group .active {
+  border: 2px solid #00ff99;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(100%);
+  color: var(--calendar-icon-color);
+}
+
+.success {
+  color: #00ff99;
+  background-color: var(--success-bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.error {
+  color: #ff4444;
+  background-color: var(--error-bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.tx-hash {
+  font-size: 0.9rem;
+  background-color: var(--info-bg);
+  color: var(--text-color);
+  padding: 6px 10px;
+  border-radius: 4px;
+  word-break: break-all;
+  margin-top: 6px;
+  border-left: 3px solid var(--border-color);
+}

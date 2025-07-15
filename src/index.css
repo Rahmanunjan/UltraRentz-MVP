@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f0f4ff, #fefefe);
+  color: #111;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+  transition: background 0.3s ease;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #1e3a8a;
+}
+
+.step-indicator {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #475569;
+}
+
+.connected-account {
+  text-align: center;
+  color: #10b981;
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  width: 100%;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+button.prev,
+button.next {
+  padding: 0.7rem 1.4rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button.prev {
+  background-color: #94a3b8;
+  color: #fff;
+}
+
+button.prev:hover {
+  background-color: #64748b;
+}
+
+button.next {
+  background-color: #6366f1;
+  color: #fff;
+}
+
+button.next:hover {
+  background-color: #4f46e5;
+}
