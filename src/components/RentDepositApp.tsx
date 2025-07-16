@@ -4,6 +4,13 @@ import DepositForm from './DepositForm';
 import SignatoryForm from './SignatoryForm';
 import { ethers } from "ethers";
 
+// ✅ Fix: Extend global Window type to include `ethereum`
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
 const getTodayDate = () => {
   const today = new Date();
   return today.toISOString().split('T')[0];
