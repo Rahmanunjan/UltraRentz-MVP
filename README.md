@@ -2,7 +2,7 @@
 
 **Securing, Protecting, and Monetising Rent Deposits on the Blockchain.**
 
-UltraRentz is a decentralized dApp built with **ethers.js**, **Polkadot.js**, **Solidity**, and **React + TypeScript** to protect tenant rent deposits using token payments and multi-signatory approval. Landlords and renters each nominate 3 signatories, with funds released only when **4 of 6** approve — no central authority required.
+UltraRentz is a decentralized dApp built with **ethers.js**, **Moonbeam**, **Solidity**, and **React + TypeScript** to protect tenant rent deposits using token payments and multi-signatory approval. Landlords and renters each nominate 3 signatories, with funds released only when **4 of 6** approve — no central authority required.
 
 ---
 
@@ -19,7 +19,7 @@ UltraRentz is a decentralized dApp built with **ethers.js**, **Polkadot.js**, **
 - 🧍‍♂️🧍‍♀️ Renter and Landlord each nominate 3 signatories  
 - 🪙 ERC-20 URZ Token deployed on **Moonbase Alpha**  
 - 💳 Choose between **fiat** or **token** payment  
-- 🌕 MetaMask + Polkadot{.js} wallet integration  
+- 🌕 MetaMask wallet integration  
 - 🌑 Light/Dark mode toggle  
 - 📅 Automatic tenancy end date calculation  
 - 🧠 On-chain arbitration logic ready for DAO integration  
@@ -64,18 +64,20 @@ UltraRentz is a decentralized dApp built with **ethers.js**, **Polkadot.js**, **
   - Polkadot.js API for future substrate compatibility
 - Wallet Support:
   - MetaMask (Ethereum)
-  - Polkadot.js Extension (Polkadot)
+  
 
 ---
 
-## 📦 Tech Stack
+## 🛠️ Tech Stack
 
-- **Solidity** (Smart Contracts)
-- **ethers.js** (Ethereum Interactions)
-- **Polkadot.js API** (Substrate Support)
-- **React + TypeScript**
-- **Vite** (Frontend Bundler)
-- **MetaMask** & **Polkadot{.js}** Extension
+- Solidity (Smart Contracts)
+- ethers.js (Ethereum Interaction)
+- React (Frontend)
+- TypeScript (Typed JavaScript)
+- Vite (Build Tool)
+- Moonbase Alpha (Moonbeam Testnet)
+- MetaMask (Wallet Integration)
+
 
 ---
 
