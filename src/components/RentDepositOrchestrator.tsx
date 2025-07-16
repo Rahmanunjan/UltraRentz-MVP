@@ -1,29 +1,30 @@
 // src/components/RentDepositOrchestrator.tsx
-// This component orchestrates the overall rent deposit process,
-// utilizing the specialized DepositForm and SignatoryForm components.
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { web3Enable, web3Accounts, web3FromSource } from "@polkadot/extension-dapp";
-import { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import type { InjectedAccountWithMeta } from "@polkadot/extension-inject/types";
+import { ethers } from "ethers";
 
-// Import your specialized components
 import DepositForm from './DepositForm';
 import SignatoryForm from './SignatoryForm';
 
-// Define the structure for the overall DApp state that this component will manage
 interface RentDepositState {
   depositAmount: string;
-  tenancyStartDate: string; // Added new state for start date
+  tenancyStartDate: string;
+  tenancyDurationMonths: string;
   tenancyEnd: string;
   paymentMode: 'fiat' | 'token';
   renterSignatories: string[];
   landlordSignatories: string[];
   landlordInput: string;
-  
+
   api: ApiPromise | null;
   polkadotAccount: InjectedAccountWithMeta | null;
   accountSource: any;
+
+  ethereumProvider: ethers.BrowserProvider | null;
+  ethereumSigner: ethers.Signer | null;
+  ethereumAccount: string | null;
 
   paymentStatus: string | null;
   paymentTxHash: string | null;
@@ -32,7 +33,8 @@ interface RentDepositState {
 const RentDepositOrchestrator: React.FC = () => {
   const [state, setState] = useState<RentDepositState>({
     depositAmount: '',
-    tenancyStartDate: '', // Initialize new state
+    tenancyStartDate: '',
+    tenancyDurationMonths: '3',
     tenancyEnd: '',
     paymentMode: 'token',
     renterSignatories: [],
@@ -41,6 +43,9 @@ const RentDepositOrchestrator: React.FC = () => {
     api: null,
     polkadotAccount: null,
     accountSource: null,
+    ethereumProvider: null,
+    ethereumSigner: null,
+    ethereumAccount: null,
     paymentStatus: null,
     paymentTxHash: null,
   });
@@ -49,12 +54,11 @@ const RentDepositOrchestrator: React.FC = () => {
     setState(prevState => ({ ...prevState, ...updates }));
   }, []);
 
-  // Effect to initialize Polkadot API connection
   useEffect(() => {
     const initializeApi = async () => {
       updateState({ paymentStatus: "Connecting to Polkadot..." });
       try {
-        const provider = new WsProvider('wss://rpc.polkadot.io'); // Use a stable Polkadot RPC endpoint
+        const provider = new WsProvider('wss://rpc.polkadot.io');
         const apiInstance = await ApiPromise.create({ provider });
         await apiInstance.isReady;
         updateState({ api: apiInstance, paymentStatus: "Polkadot API ready." });
@@ -73,8 +77,6 @@ const RentDepositOrchestrator: React.FC = () => {
     };
   }, [state.api, updateState]);
 
-
-  // Wallet connection logic (centralized here)
   const connectPolkadotWallet = useCallback(async () => {
     updateState({ paymentStatus: "Connecting wallet..." });
     try {
@@ -92,7 +94,7 @@ const RentDepositOrchestrator: React.FC = () => {
         return;
       }
 
-      const account = accounts[0]; // Select the first account, or allow user selection
+      const account = accounts[0];
       const injector = await web3FromSource(account.meta.source);
 
       updateState({
@@ -106,6 +108,30 @@ const RentDepositOrchestrator: React.FC = () => {
     }
   }, [updateState]);
 
+  const connectEthereumWallet = useCallback(async () => {
+    try {
+      if (!window.ethereum) {
+        alert("MetaMask not found. Please install it.");
+        return;
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []); // Request access to accounts
+      const signer = await provider.getSigner();
+      const account = await signer.getAddress();
+
+      updateState({
+        ethereumProvider: provider,
+        ethereumSigner: signer,
+        ethereumAccount: account,
+        paymentStatus: `✅ Ethereum wallet connected: ${account}`,
+      });
+    } catch (error: any) {
+      console.error("Error connecting Ethereum wallet:", error);
+      updateState({ paymentStatus: `❌ Ethereum Wallet Error: ${error.message || "Unknown"}` });
+    }
+  }, [updateState]);
+
   const setRenterSignatories = useCallback((newSignatories: string[]) => {
     updateState({ renterSignatories: newSignatories });
   }, [updateState]);
@@ -114,24 +140,46 @@ const RentDepositOrchestrator: React.FC = () => {
     updateState({ landlordSignatories: newSignatories });
   }, [updateState]);
 
+  const setTenancyDurationMonths = useCallback((val: string) => {
+    updateState({ tenancyDurationMonths: val });
+  }, [updateState]);
+
+  const setEthereumProvider = useCallback((provider: ethers.BrowserProvider | null) => {
+    updateState({ ethereumProvider: provider });
+  }, [updateState]);
+
+  const setEthereumSigner = useCallback((signer: ethers.Signer | null) => {
+    updateState({ ethereumSigner: signer });
+  }, [updateState]);
+
+  const setEthereumAccount = useCallback((account: string | null) => {
+    updateState({ ethereumAccount: account });
+  }, [updateState]);
 
   return (
     <div className="main-container">
       <h1>UltraRentz Deposit & Signatory Setup</h1>
 
-      {/* 1. Deposit Form Section (using DepositForm.tsx) */}
       <DepositForm
         depositAmount={state.depositAmount}
         setDepositAmount={(val) => updateState({ depositAmount: val })}
-        tenancyStartDate={state.tenancyStartDate} // Pass new prop
-        setTenancyStartDate={(val) => updateState({ tenancyStartDate: val })} // Pass new prop setter
+        tenancyStartDate={state.tenancyStartDate}
+        setTenancyStartDate={(val) => updateState({ tenancyStartDate: val })}
+        tenancyDurationMonths={state.tenancyDurationMonths}
+        setTenancyDurationMonths={setTenancyDurationMonths}
         tenancyEnd={state.tenancyEnd}
         setTenancyEnd={(val) => updateState({ tenancyEnd: val })}
         paymentMode={state.paymentMode}
         setPaymentMode={(val) => updateState({ paymentMode: val as 'fiat' | 'token' })}
         fiatConfirmed={false}
-        polkadotAccount={state.polkadotAccount}
-        accountSource={state.accountSource}
+        ethereumProvider={state.ethereumProvider}
+        ethereumSigner={state.ethereumSigner}
+        ethereumAccount={state.ethereumAccount}
+        setEthereumProvider={setEthereumProvider}
+        setEthereumSigner={setEthereumSigner}
+        setEthereumAccount={setEthereumAccount}
+        connectEthereumWallet={connectEthereumWallet}
+        polkadotAccount={state.polkadotAccount?.address ?? null}
         api={state.api}
         landlordInput={state.landlordInput}
         setLandlordInput={(val) => updateState({ landlordInput: val })}
@@ -139,12 +187,12 @@ const RentDepositOrchestrator: React.FC = () => {
         setPaymentStatus={(val) => updateState({ paymentStatus: val })}
         paymentTxHash={state.paymentTxHash}
         setPaymentTxHash={(val) => updateState({ paymentTxHash: val })}
-        connectPolkadotWallet={connectPolkadotWallet} // Pass the centralized connectWallet function
+        connectPolkadotWallet={connectPolkadotWallet}
+        darkMode={false}
       />
 
       <div style={{ margin: '30px 0', borderBottom: '1px solid #eee' }}></div>
 
-      {/* 2. Renter Signatories Section (using SignatoryForm.tsx) */}
       <SignatoryForm
         type="Renter"
         signatories={state.renterSignatories}
@@ -155,7 +203,6 @@ const RentDepositOrchestrator: React.FC = () => {
 
       <div style={{ margin: '30px 0', borderBottom: '1px solid #eee' }}></div>
 
-      {/* 3. Landlord Signatories Section (using SignatoryForm.tsx) */}
       <SignatoryForm
         type="Landlord"
         signatories={state.landlordSignatories}
@@ -164,7 +211,6 @@ const RentDepositOrchestrator: React.FC = () => {
         setInput={() => {}}
       />
 
-      {/* Overall status display if needed outside specific forms */}
       {state.paymentStatus && !state.paymentTxHash && (
         <p className="status-text" style={{ marginTop: '20px', textAlign: 'center', color: state.paymentStatus.startsWith('Error') || state.paymentStatus.startsWith('❌') ? 'red' : 'green' }}>
           {state.paymentStatus}
@@ -193,20 +239,19 @@ const RentDepositOrchestrator: React.FC = () => {
           alert("Overall Rent Deposit Setup Confirmed (stub for smart contract interaction).");
         }}
         disabled={
-            !state.api ||
-            !state.polkadotAccount ||
-            !state.depositAmount ||
-            parseFloat(state.depositAmount) <= 0 ||
-            !state.tenancyStartDate ||
-            !state.tenancyEnd ||
-            new Date(state.tenancyEnd) <= new Date(state.tenancyStartDate) ||
-            state.renterSignatories.length < 1 ||
-            state.landlordSignatories.length < 1
+          !state.api ||
+          !state.polkadotAccount ||
+          !state.depositAmount ||
+          parseFloat(state.depositAmount) <= 0 ||
+          !state.tenancyStartDate ||
+          !state.tenancyEnd ||
+          new Date(state.tenancyEnd) <= new Date(state.tenancyStartDate) ||
+          state.renterSignatories.length < 1 ||
+          state.landlordSignatories.length < 1
         }
       >
         Finalize Deposit & Signatories
       </button>
-
     </div>
   );
 };

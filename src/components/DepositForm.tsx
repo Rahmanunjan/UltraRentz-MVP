@@ -58,7 +58,10 @@ interface DepositFormProps {
   paymentTxHash: string | null;
   setPaymentTxHash: (val: string | null) => void;
   connectEthereumWallet: () => Promise<void>;
+  connectPolkadotWallet?: () => Promise<void>; // ✅ Added
   darkMode: boolean;
+  api?: any;
+  polkadotAccount?: string | null;
 }
 
 export default function DepositForm({
@@ -87,7 +90,9 @@ export default function DepositForm({
   paymentTxHash,
   setPaymentTxHash,
   connectEthereumWallet,
-  darkMode
+  connectPolkadotWallet: _connectPolkadotWallet, // ✅ Added
+  darkMode,
+  polkadotAccount: _polkadotAccount // safely ignore this unused prop
 }: DepositFormProps) {
   const [selectedToken, setSelectedToken] = useState("URZ");
   const [selectedFiat, setSelectedFiat] = useState("USD");

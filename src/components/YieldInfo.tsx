@@ -22,7 +22,7 @@ export default function YieldInfo({
   yieldAmount,
   yieldToken,
   yieldStatus,
-  setYieldStatus, // Kept for potential internal status updates if needed
+  setYieldStatus: _setYieldStatus, // Kept for potential internal status updates if needed
   onClaimYield, // The actual function to trigger the yield claim process
   isClaiming = false, // Default to false
 }: YieldInfoProps) {

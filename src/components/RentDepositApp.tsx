@@ -1,5 +1,5 @@
 // src/components/RentDepositApp.tsx
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import DepositForm from './DepositForm';
 import SignatoryForm from './SignatoryForm';
 import { ethers } from "ethers";
@@ -156,6 +156,8 @@ const RentDepositApp: React.FC = () => {
         setPaymentTxHash={(val) => updateState({ paymentTxHash: val })}
         connectEthereumWallet={connectEthereumWallet}
         darkMode={darkMode}
+
+        polkadotAccount={null}  // <-- Added to fix build error
       />
 
       <SignatoryForm
