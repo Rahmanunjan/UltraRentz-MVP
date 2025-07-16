@@ -1,71 +1,61 @@
-# React + TypeScript + Vite
+# 🏡 UltraRentz-MVP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Securing, Protecting, and Monetising Rent Deposits on the Blockchain.**
 
-Currently, two official plugins are available:
+UltraRentz is a decentralized dApp built with **ethers.js**, **Solidity**, and **React + TypeScript** to protect tenant rent deposits using token payments and multi-signatory approval. Landlords and renters nominate 3 signatories each, with funds only released when **4 of 6** approve — no central authority required.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Live Demo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+🔗 [ultrarentz.vercel.app](https://ultrarentz.vercel.app) *(Replace with your actual URL after deployment)*
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## 🧠 Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- 🧾 **Pay Rent Deposits** using URZ tokens  
+- 🖊️ **Multi-signatory system** (4 of 6 must approve for release)  
+- 🧍‍♂️🧍‍♀️ Renter and Landlord each nominate 3 signatories  
+- 🪙 ERC-20 URZ Token deployed on **Moonbase Alpha**  
+- 💳 Choose **fiat** or **token** mode  
+- 🌕 MetaMask wallet integration  
+- 🌑 Light/Dark mode toggle  
+- 📅 Automatic tenancy end date calculation  
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 💸 How to Pay with URZ
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# UltraRentz-MVP
-# UltraRentz-MVP
+1. Connect MetaMask wallet to **Moonbase Alpha** network.  
+2. Add the **URZ token** manually to MetaMask:
+   - Contract: `0xB1c01f7e6980AbdbAec0472C0e1A58EB46D39f3C`
+   - Symbol: `URZ`
+   - Decimals: `18`
+3. Choose "Token" mode in the form.
+4. Input:
+   - Deposit amount
+   - Tenancy start date and duration
+   - Landlord wallet address
+5. Click **Pay Token**.
+
+---
+
+## ✍️ How to Add Signatories
+
+1. Scroll to the **Signatories Section**.
+2. Add 3 emails under **Renter** and **Landlord** sections.
+3. Click `Finalize Deposit & Signatories` when:
+   - URZ payment is confirmed ✅
+   - Wallet is connected
+   - All 6 signatories are added
+
+---
+
+## 🛠️ Tech Stack
+
+- Solidity  
+- ethers.js  
+- React  
+- **TypeScript**  
+- Vite
