@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 
 const URZ_CONTRACT_ADDRESS = '0xB1c01f7e6980AbdbAec0472C0e1A58EB46D39f3C';

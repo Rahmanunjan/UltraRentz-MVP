@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'; // Import useCallback
+import { useCallback } from 'react'; // Import useCallback
 // Removed unused import from './components/ui/button'
 
 interface StakeDepositFormProps {

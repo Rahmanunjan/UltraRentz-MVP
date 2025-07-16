@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import RentDepositApp from "./components/RentDepositApp"; // This will now be your orchestrator
 import "./styles.css"; // Your existing custom styles
 
