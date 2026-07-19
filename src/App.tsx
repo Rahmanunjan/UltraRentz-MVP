@@ -1,52 +1,48 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// ThemeProvider and ThemeContext removed
-import { AuthProvider } from "./contexts/AuthContext";
-import DashboardLayout from "./components/DashboardLayout";
-import MottoFooter from "./components/MottoFooter";
-import EscrowOrchestrator from "./components/EscrowOrchestrator";
-// import Yield from "./components/Yield"; // unused
-import TopHeader from "./layouts/TopHeader";
-import MobileMenu from "./components/MobileMenu";
-import HomePage from "./pages/HomePage";
-import RentDepositsPage from "./pages/RentDepositsPage";
-import YieldPage from "./pages/SignatoryYieldPage";
-import DisputesPage from "./pages/DisputesPage";
-import DashboardPage from "./pages/DashboardPage";
-import "./styles.css";
-
-const AppContent: React.FC = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  // Always use dark theme classes via Tailwind or CSS
-  return (
-    <Router>
-      <DashboardLayout>
-        <TopHeader onMobileMenuToggle={toggleMobileMenu} />
-        <MobileMenu isOpen={isMobileMenuOpen} onClose={closeMobileMenu} />
-        {/* Theme toggle removed, always dark theme */}
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/rent-deposits" element={<RentDepositsPage />} />
-          <Route path="/yield" element={<YieldPage />} />
-          <Route path="/disputes" element={<DisputesPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/escrow" element={<EscrowOrchestrator />} />
-        </Routes>
-        <MottoFooter />
-      </DashboardLayout>
-    </Router>
-  );
-};
-
+import React from "react";
+import RentPaymentFlow from "./components/RentPaymentFlow";
+import "./index.css";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    // Added a true black background container to make white text and glowing orbs pop
+    <div className="min-h-screen w-full bg-[#030303] relative overflow-x-hidden flex items-center justify-center">
+      
+      {/* Background orbs */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 0
+      }}>
+        {/* Blue Orb */}
+        <div style={{
+          position: 'absolute',
+          top: '-10%',
+          left: '-10%',
+          width: '500px',
+          height: '500px',
+          background: 'rgba(37, 99, 235, 0.25)',
+          borderRadius: '50%',
+          filter: 'blur(140px)',
+        }} />
+        {/* Purple Orb */}
+        <div style={{
+          position: 'absolute',
+          bottom: '-10%',
+          right: '-10%',
+          width: '500px',
+          height: '500px',
+          background: 'rgba(147, 51, 234, 0.25)',
+          borderRadius: '50%',
+          filter: 'blur(140px)',
+        }} />
+      </div>
+      
+      {/* Interactive Main Flow Component */}
+      <RentPaymentFlow />
+    </div>
   );
 }

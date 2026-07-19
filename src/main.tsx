@@ -1,26 +1,21 @@
-
-
 import { StrictMode } from "react";
-import { Buffer } from "buffer";
-// Polyfill Buffer for browser
-if (!(window).Buffer) (window).Buffer = Buffer;
-import * as Sentry from "@sentry/react";
-// Use browserTracingIntegration for Sentry v8+
 import { createRoot } from "react-dom/client";
-import { PrivyProvider } from "@privy-io/react-auth";
-// 💡 REQUIRED IMPORT: Wagmi chain objects for network configuration
-import { polygonMumbai } from 'wagmi/chains'; 
-
+import { AuthCoreContextProvider } from "@particle-network/auth-core-modal";
+import { Arbitrum } from "@particle-network/chains";
 import App from "./App";
-import './styles.css';
-
-
-
-// Force dark theme on html at runtime
-document.documentElement.setAttribute('data-theme', 'dark');
+import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <AuthCoreContextProvider
+      options={{
+        projectId: "d6e00d17-4973-4494-82ea-d21658467294",
+        clientKey: "c2w50ATDvdGdVDwcSIc8p60iuktn3JoYqmZr0DyS",
+        appId: "d6e00d17-4973-4494-82ea-d21658467294",
+        chains: [Arbitrum],
+      }}
+    >
+      <App />
+    </AuthCoreContextProvider>
   </StrictMode>
 );

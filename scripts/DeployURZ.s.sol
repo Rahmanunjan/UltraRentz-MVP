@@ -1,31 +1,27 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.33;
 
-import { Script } from "forge-std/Script.sol";
-import { console } from "forge-std/console.sol";
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-// Mock Token to act as URZ for deployment
-contract UltraRentzToken is ERC20 {
-    constructor(uint256 initialSupply) ERC20("UltraRentz Token", "URZ") {
-        // Mint the initial supply to the deployer (msg.sender)
-        _mint(msg.sender, initialSupply); 
-    }
-}
+import {Script, console} from "forge-std/Script.sol";
+import "../src/contracts/UltraRentzEscrow.sol";
+import "../src/contracts/EscrowFactory.sol";
 
 contract DeployURZ is Script {
-    function run() external returns (address urzTokenAddress) {
-        // Define a reasonable total supply (e.g., 1 million tokens with 18 decimals)
-        // You can adjust this value.
-        uint256 initialSupply = 1_000_000 * 10**18;
+    function run() public {
+        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        
+        vm.startBroadcast(deployerPrivateKey);
 
-        vm.startBroadcast();
+        // 1. Deploy the Implementation contract
+        UltraRentzEscrow implementation = new UltraRentzEscrow();
 
-        UltraRentzToken urz = new UltraRentzToken(initialSupply);
-        urzTokenAddress = address(urz);
+        // 2. Deploy the Factory
+        EscrowFactory factory = new EscrowFactory(address(implementation));
 
         vm.stopBroadcast();
-
-        console.log("UltraRentz Token (URZ) deployed at:", urzTokenAddress);
+        
+        // Logs for verification
+        console.log("Implementation deployed at:", address(implementation));
+        console.log("Factory deployed at:", address(factory));
+        console.log("System Ready. Use factory.createEscrow(...) to deploy configured clones.");
     }
 }

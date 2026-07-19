@@ -4,30 +4,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#2563eb", // Brand Blue
-        secondary: "#10b981", // Emerald Green
-        background: "#f9fafb", // Soft Gray
-        neutral: "#1f2937", // Dark Charcoal
-        error: "#dc2626", // Red
-        accent: "#f59e0b", // Gold (for yields/profits)
+        // Ensuring a true black is available
+        dark: '#050505',
       },
-      fontFamily: {
-        sans: [
-          "Inter",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "Segoe UI",
-          "Roboto",
-          "sans-serif",
-        ],
-        display: ["Inter", "ui-sans-serif", "system-ui"],
+      animation: {
+        'shimmer': 'shimmer 2s linear infinite',
       },
-      boxShadow: {
-        custom: "0 8px 24px rgba(124, 58, 237, 0.2)",
+      keyframes: {
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
-      borderRadius: {
-        xl: "1rem",
-      },
+      // Adding explicit blur values just in case
+      backdropBlur: {
+        '40': '40px',
+        'xl': '24px',
+        '2xl': '40px',
+      }
     },
   },
   plugins: [],

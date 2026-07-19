@@ -1,17 +1,16 @@
-<p align="center">
-   <img src="https://img.shields.io/badge/Coverage-90%25%2B-brightgreen" alt="Coverage Badge" />
-</p>
+# UltraRentz: The Yield-Backed Rental Protocol
 
-<p align="center">
-   <b>Security-First Testing:</b> Advanced fuzzing and invariant-style tests ensure protocol accounting is bulletproof. <a href="COVERAGE_AND_SECURITY.md">See full methodology & coverage report</a>.
-</p>
+**Vision:** Turning Rent Deposits into Yield-Bearing Assets
 
+UltraRentz is a decentralized protocol that transforms rental deposits into yield-generating assets through secure multi-signature escrow and DeFi integration. Built on **Initia (Interwoven Layer)**, **MoveVM**, **Supabase**, and **Next.js** to provide tenants and landlords with secure, profitable rental deposit management.
 
-# 🏡 UltraRentz-MVP
+## 🚀 The Flow
 
-**Securing, Protecting, and Monetising Rent Deposits on the Blockchain.**
+**Multi-sig Escrow → DeFi Yield → DAO Dispute Resolution**
 
-UltraRentz is a decentralized dApp built with **ethers.js**, **Moonbeam**, **Solidity**, and **React + TypeScript** to protect tenant rent deposits using token payments and multi-signatory approval. Landlords and renters each nominate 3 signatories, with funds released only when **4 of 6** approve — no central authority required.
+1. **Multi-sig Escrow**: 4 of 6 signatories approve deposit releases
+2. **DeFi Yield**: Deposits generate 6% APY across multiple protocols  
+3. **DAO Dispute Resolution**: Community-governed dispute handling
 
 ---
 
@@ -196,14 +195,14 @@ All features are integrated into the Disputes page and related modals/components
 
 ## 🛠️ Tech Stack
 
-- Solidity (Smart Contracts)  
-- ethers.js (Ethereum Interaction)  
-- React (Frontend)  
-- TypeScript (Typed JavaScript)  
-- Vite (Build Tool)  
-- Moonbase Alpha (Moonbeam Testnet)  
-- MetaMask & Sequence (Wallet Integration)  
-- Google Cloud (Hosting)
+- **Initia (Interwoven Layer)** - High-performance blockchain
+- **MoveVM** - Secure smart contract platform  
+- **Supabase** - Backend and database
+- **Next.js** - Frontend framework
+- **TypeScript** - Type-safe development
+- **@initia/react-wallet-widget** - Wallet integration
+- **React + Tailwind CSS** - UI components
+- **DeFi Protocols** - Aave, Compound, Morpho, Yearn, Curve, Uniswap
 
 ---
 
