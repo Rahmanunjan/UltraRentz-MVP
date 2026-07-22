@@ -8,7 +8,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 contract RentDepositVault is Ownable, ReentrancyGuard {
     // Arbitrum V3 Addresses
-    IPool public constant AAVE_POOL = IPool(0x794a61358D052d59C348259695628249a5D86326);
+    IPool public constant AAVE_POOL = IPool(0x794A61358D052D59C348259695628249A5D86326);
     IERC20 public constant USDC = IERC20(0xaf88d065e77c8cC2239327C5EDb3A432268e5831);
 
     mapping(address => uint256) public deposits;

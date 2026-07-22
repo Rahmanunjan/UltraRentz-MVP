@@ -14,7 +14,9 @@ auto_detect_remappings = false
 remappings = [
     "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
     "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
-    "@src/contracts/=src/contracts/"
+    "@aave/core-v3/=lib/aave-v3-core/",
+    "@src/contracts/=src/contracts/",
+    "forge-std/=lib/forge-std/src/"
 ]
 
 [fuzz]
