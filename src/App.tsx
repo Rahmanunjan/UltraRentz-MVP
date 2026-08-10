@@ -1,5 +1,5 @@
 import React from "react";
-import RentPaymentFlow from "./components/RentPaymentFlow";
+import LoginCard from "./components/LoginCard";
 import "./index.css";
 
 export default function App() {
@@ -41,8 +41,8 @@ export default function App() {
         }} />
       </div>
       
-      {/* Interactive Main Flow Component */}
-      <RentPaymentFlow />
+      {/* UltraRentz Authentication */}
+      <LoginCard />
     </div>
   );
 }
