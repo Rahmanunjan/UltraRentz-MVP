@@ -1,0 +1,29 @@
+{
+  "name": "arclend-sdk",
+  "version": "1.0.2",
+  "description": "ArcLend contract ABIs and deployment addresses for Arc Testnet (Chain 5042002)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generate-abis": "node scripts/generate-abis.js"
+  },
+  "keywords": [
+    "arc-testnet",
+    "arclend",
+    "defi",
+    "lending",
+    "erc4626",
+    "circle",
+    "usdc"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  }
+}

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.33;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -10,7 +10,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 /**
  * @title RentDepositVault
- * @notice Lease-specific USDC rental deposit escrow.
+ * @notice Lease-specific USDC rental deposit escrow with simulated yield.
  *
  * SECURITY MODEL
  *
@@ -27,6 +27,10 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
  * 8. AI-triggered releases have a delay.
  * 9. Recipient addresses are taken from the lease, not supplied
  *    by the caller.
+ * 10. Yield is paid from an owner-funded reserve, calculated
+ *     transparently on-chain. This is a DEMO mechanism -- production
+ *     would route idle deposits into an Arc-native lending/yield
+ *     protocol instead of a manually funded reserve.
  *
  * IMPORTANT:
  * This is a security-oriented prototype and should still undergo
@@ -44,6 +48,7 @@ contract RentDepositVault is
     // -----------------------------------------------------------------------
 
     uint256 public constant AGENT_DELAY = 1 hours;
+    uint256 public constant YIELD_RATE_BPS = 500; // 5% simulated APY - DEMO ONLY
 
     // -----------------------------------------------------------------------
     // IMMUTABLES
@@ -57,6 +62,12 @@ contract RentDepositVault is
 
     address public aiAgent;
     address public arbiter;
+
+    // -----------------------------------------------------------------------
+    // YIELD RESERVE
+    // -----------------------------------------------------------------------
+
+    uint256 public yieldReserve;
 
     // -----------------------------------------------------------------------
     // LEASE STATE
@@ -191,6 +202,16 @@ contract RentDepositVault is
 
     event ArbiterUpdated(
         address indexed newArbiter
+    );
+
+    event YieldReserveFunded(
+        uint256 amount
+    );
+
+    event YieldPaid(
+        uint256 indexed leaseId,
+        address indexed recipient,
+        uint256 amount
     );
 
     // -----------------------------------------------------------------------
@@ -385,6 +406,59 @@ contract RentDepositVault is
             leaseId,
             received
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // YIELD RESERVE
+    // -----------------------------------------------------------------------
+
+    /**
+     * @notice Owner tops up the yield reserve with real USDC.
+     *
+     * DEMO NOTE: in production this would be replaced by routing idle
+     * deposits into an Arc-native lending/yield protocol. For this
+     * demo, the vault owner seeds a real, on-chain, verifiable reserve
+     * instead of faking a number.
+     */
+    function fundYieldReserve(uint256 amount)
+        external
+        onlyOwner
+        nonReentrant
+    {
+        usdc.safeTransferFrom(msg.sender, address(this), amount);
+        yieldReserve += amount;
+        emit YieldReserveFunded(amount);
+    }
+
+    /**
+     * @notice Returns the simulated yield accrued for a lease so far.
+     *
+     * Calculated at YIELD_RATE_BPS simple APY over the time elapsed
+     * between the lease start and either now or the lease end time,
+     * whichever is earlier.
+     */
+    function pendingYield(uint256 leaseId)
+        public
+        view
+        returns (uint256)
+    {
+        Lease memory lease = leases[leaseId];
+
+        if (lease.tenant == address(0)) {
+            return 0;
+        }
+
+        uint256 endPoint = block.timestamp < lease.endTime
+            ? block.timestamp
+            : lease.endTime;
+
+        if (endPoint <= lease.startTime) {
+            return 0;
+        }
+
+        uint256 elapsed = endPoint - lease.startTime;
+
+        return (lease.deposit * YIELD_RATE_BPS * elapsed) / (365 days * 10_000);
     }
 
     // -----------------------------------------------------------------------
@@ -671,6 +745,9 @@ contract RentDepositVault is
      *
      * The AI agent can call requestRelease(), but the delay gives
      * the protocol time to detect/dispute unexpected actions.
+     *
+     * Accrued yield (if any, and if the reserve has funds) is paid
+     * to the tenant alongside the principal release.
      */
     function executeRelease(uint256 leaseId)
         external
@@ -700,6 +777,19 @@ contract RentDepositVault is
 
         request.executed = true;
         lease.status = LeaseStatus.Released;
+
+        // ---------------------------------------------------------------
+        // YIELD PAYOUT (added, DEMO mechanism)
+        // ---------------------------------------------------------------
+        uint256 yieldDue = pendingYield(leaseId);
+        if (yieldDue > yieldReserve) {
+            yieldDue = yieldReserve;
+        }
+        if (yieldDue > 0) {
+            yieldReserve -= yieldDue;
+            usdc.safeTransfer(lease.tenant, yieldDue);
+            emit YieldPaid(leaseId, lease.tenant, yieldDue);
+        }
 
         /**
          * NO ARBITRARY RECIPIENTS.
