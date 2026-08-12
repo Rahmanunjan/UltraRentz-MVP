@@ -11,6 +11,14 @@ Built for the Programmable Money Hackathon (Arc / Circle), targeting both the De
 
 Rental deposits sit as dead capital for the length of a tenancy, and settlement at the end is often slow, opaque, and disputed. Cleaning, damage, and arrears claims routinely turn a simple refund into a drawn-out disagreement with no clear process.
 
+### Demo & submission links
+--------------------------
+
+-   **Demo video:** https://www.loom.com/share/27df3b8376064ae891cd70dc2b06add4
+-   **Presentation deck:** https://docs.google.com/presentation/d/1rLlPgwJpryLbhF5iGeP1bKkDm5DXcUWr
+-   **Team video:** https://www.loom.com/share/c2b90c608a614d5582c609015a58add0
+-   **Live contract (Arc Testnet):** https://testnet.arcscan.app/address/0x12a69815D9fF4C7DB6f84852f46CF09325daEeBD
+
 ### The solution
 ------------
 
