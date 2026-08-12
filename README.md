@@ -1,5 +1,4 @@
 ### ArcRent
-=======
 
 Rental deposits, turned into programmable money.
 
