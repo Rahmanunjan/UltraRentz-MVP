@@ -39,3 +39,7 @@ coverage/
 cache/
 
 .env
+
+# Foundry build artifacts
+out/
+cache_forge/

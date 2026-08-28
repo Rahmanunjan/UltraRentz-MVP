@@ -31,6 +31,10 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
  *     transparently on-chain. This is a DEMO mechanism -- production
  *     would route idle deposits into an Arc-native lending/yield
  *     protocol instead of a manually funded reserve.
+ * 11. When a dispute is resolved by the arbiter, the arbiter's
+ *     tenant/landlord split is recorded on the lease and MUST be
+ *     used at payout time -- it is never re-derived from the
+ *     landlord's original (disputed) claim.
  *
  * IMPORTANT:
  * This is a security-oriented prototype and should still undergo
@@ -103,6 +107,13 @@ contract RentDepositVault is
         uint256 claimedAmount;
 
         LeaseStatus status;
+
+        // Set only when an arbiter resolves a dispute. When true,
+        // executeRelease must use resolvedTenantAmount/resolvedLandlordAmount
+        // instead of claimedAmount.
+        bool disputeResolved;
+        uint256 resolvedTenantAmount;
+        uint256 resolvedLandlordAmount;
     }
 
     mapping(uint256 => Lease) public leases;
@@ -340,7 +351,10 @@ contract RentDepositVault is
             endTime: endTime,
             claimDeadline: endTime + claimPeriod,
             claimedAmount: 0,
-            status: LeaseStatus.Active
+            status: LeaseStatus.Active,
+            disputeResolved: false,
+            resolvedTenantAmount: 0,
+            resolvedLandlordAmount: 0
         });
 
         emit LeaseCreated(
@@ -605,7 +619,9 @@ contract RentDepositVault is
      * tenantAmount + landlordAmount must equal the original deposit.
      *
      * This prevents the arbiter from accidentally creating or destroying
-     * accounting value.
+     * accounting value, and the resulting split is recorded on the lease
+     * so it is what actually gets paid out at execution time -- not the
+     * landlord's original (disputed) claim.
      */
     function resolveDispute(
         uint256 leaseId,
@@ -634,6 +650,9 @@ contract RentDepositVault is
             revert InvalidResolution();
         }
 
+        lease.disputeResolved = true;
+        lease.resolvedTenantAmount = tenantAmount;
+        lease.resolvedLandlordAmount = landlordAmount;
         lease.status = LeaseStatus.Resolved;
 
         emit ClaimResolved(
@@ -812,11 +831,19 @@ contract RentDepositVault is
         }
         else {
 
-            uint256 landlordAmount =
-                lease.claimedAmount;
+            uint256 landlordAmount;
+            uint256 tenantAmount;
 
-            uint256 tenantAmount =
-                lease.deposit - landlordAmount;
+            // If an arbiter resolved a dispute, their recorded split
+            // is authoritative. Otherwise fall back to the landlord's
+            // (undisputed, tenant-accepted) original claim.
+            if (lease.disputeResolved) {
+                landlordAmount = lease.resolvedLandlordAmount;
+                tenantAmount = lease.resolvedTenantAmount;
+            } else {
+                landlordAmount = lease.claimedAmount;
+                tenantAmount = lease.deposit - landlordAmount;
+            }
 
             if (landlordAmount > 0) {
                 usdc.safeTransfer(
